@@ -21,10 +21,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::resource('/tweets', TweetsController::class);
-
 // web.php
-    
-Route::post('/tweets/{tweet}/replies', [TweetsController::class, 'storeReply'])->name('tweets.storeReply');
+Route::middleware(['auth'])->group(function () {
+    Route::post('/tweets/{tweet}/replies', [TweetsController::class, 'storeReply'])->name('tweets.storeReply');
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    Route::resource('/tweets', TweetsController::class);
+});

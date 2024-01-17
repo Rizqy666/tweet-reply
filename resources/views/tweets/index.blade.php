@@ -10,37 +10,31 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
-
                 @if (session('error'))
                     <div class="alert alert-danger  alert-dismissible fade show" role="alert">
                         <strong>Error!</strong> {{ session('error') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
-
                 <div class="card">
                     <div class="card-header">{{ __('Dashboard') }}</div>
                     <div class="card-body">
                         <form action="{{ route('tweets.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
-                                <label for="post" class="form-label">Tweets</label>
-                                <textarea name="post" id="post" cols="30" rows="10" class="form-control" required></textarea>
+                                <label for="post" class="form-label">Tweet</label>
+                                <textarea name="post" id="post" cols="30" rows="5" class="form-control" required></textarea>
                             </div>
-
                             <div class="mb-3">
-                                <label for="image" class="form-label">Image (optional)</label>
+                                <label for="image" class="form-label">Image</label>
                                 <input type="file" name="image" id="image" class="form-control">
                             </div>
-
                             <div class="mb-3">
                                 <button class="btn btn-primary" type="submit">Post</button>
                             </div>
                         </form>
-
                     </div>
                 </div>
-
                 @forelse ($tweets as $tweet)
                     <br>
                     <div class="card">
@@ -51,17 +45,49 @@
                             <div class="d-flex justify-content-between align-items-start">
                                 @if ($tweet->image)
                                     <div>
-                                        <a href="{{ asset('images/' . $tweet->image) }}" id="downloadLink" download>
+                                        <a href="{{ asset('images/' . $tweet->image) }}">
                                             <img src="{{ asset('images/' . $tweet->image) }}" alt="Tweet Image"
-                                                class="img-fluid" style="max-width: 200px;">
+                                                class="img-fluid" style="max-width: 500px;">
                                         </a>
-
-
                                     </div>
                                 @endif
-
-
-
+                                @if ($tweet->image)
+                                    <div>
+                                        @if ($tweet->image)
+                                            <button type="button" class="btn btn-primary btn-sm mx-1" data-toggle="modal"
+                                                data-target="#imageModal">
+                                                <i class="fas fa-image"></i> Pratinjau Gambar
+                                            </button>
+                                            <a href="{{ asset('images/' . $tweet->image) }}" download
+                                                class="btn btn-success btn-sm">
+                                                <i class="fas fa-download"></i> Unduh Gambar
+                                            </a>
+                                        @endif
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="imageModal" tabindex="-1" role="dialog"
+                                            aria-labelledby="imageModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-xl">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <img src="{{ asset('images/' . $tweet->image) }}" alt="Tweet Image"
+                                                            class="img-fluid" style="max-width: 100%;">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                             <!-- Menampilkan balasan untuk setiap tweet -->
                             <div class="replies">
@@ -71,12 +97,10 @@
                                             $userName = \App\Models\User::find($reply->user_id)->name ?? 'User Tidak Dikenal';
                                         @endphp
                                         <strong>{{ $userName }}</strong>:
-                                        {{ $reply->reply }}
+                                        <i class="fas fa-reply"></i> {{ $reply->reply }}
                                     </div>
                                 @endforeach
                             </div>
-
-
                             <div class="d-flex justify-content-between align-items-end">
                                 <small class="text-muted">{{ $tweet->created_at->diffForHumans() }}</small>
                                 <div class="btn-group" role="group" aria-label="Tindakan Tweet">
@@ -100,8 +124,8 @@
                                     <button type="button" class="btn btn-primary btn-sm reply-btn">
                                         <i class="fas fa-reply"></i> Balas
                                     </button>
-                                </div>
 
+                                </div>
                             </div>
 
                             <!-- Form balasan untuk setiap tweet -->
@@ -113,14 +137,17 @@
                                     <textarea name="reply" id="reply" cols="30" rows="2" class="form-control" required></textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <button class="btn btn-primary btn-sm" type="submit"><i class="fas fa-reply"></i> Kirim
+                                    <button class="btn btn-primary btn-sm" type="submit"><i class="fas fa-reply"></i>
+                                        Kirim
                                         Balasan</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 @empty
-                    <p>Tidak ada tweet yang tersedia.</p>
+                    <div class="justify-content-center align-items-end py-4">
+                        <h4 class="text-center">Tidak ada tweet yang tersedia.</h4>
+                    </div>
                 @endforelse
             </div>
         </div>
