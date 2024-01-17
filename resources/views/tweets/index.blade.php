@@ -21,16 +21,23 @@
                 <div class="card">
                     <div class="card-header">{{ __('Dashboard') }}</div>
                     <div class="card-body">
-                        <form action="{{ route('tweets.store') }}" method="POST">
+                        <form action="{{ route('tweets.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
                                 <label for="post" class="form-label">Tweets</label>
                                 <textarea name="post" id="post" cols="30" rows="10" class="form-control" required></textarea>
                             </div>
+
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Image (optional)</label>
+                                <input type="file" name="image" id="image" class="form-control">
+                            </div>
+
                             <div class="mb-3">
                                 <button class="btn btn-primary" type="submit">Post</button>
                             </div>
                         </form>
+
                     </div>
                 </div>
 
@@ -41,7 +48,21 @@
                             <h5 class="card-title">{{ $tweet->user->name ?? 'User Tidak Dikenal' }}</h5>
                             <hr>
                             <p class="card-text">{{ $tweet->post }}</p>
+                            <div class="d-flex justify-content-between align-items-start">
+                                @if ($tweet->image)
+                                    <div>
+                                        <a href="{{ asset('images/' . $tweet->image) }}" id="downloadLink" download>
+                                            <img src="{{ asset('images/' . $tweet->image) }}" alt="Tweet Image"
+                                                class="img-fluid" style="max-width: 200px;">
+                                        </a>
 
+
+                                    </div>
+                                @endif
+
+
+
+                            </div>
                             <!-- Menampilkan balasan untuk setiap tweet -->
                             <div class="replies">
                                 @foreach ($tweet->replies as $reply)
@@ -80,6 +101,7 @@
                                         <i class="fas fa-reply"></i> Balas
                                     </button>
                                 </div>
+
                             </div>
 
                             <!-- Form balasan untuk setiap tweet -->
@@ -100,9 +122,6 @@
                 @empty
                     <p>Tidak ada tweet yang tersedia.</p>
                 @endforelse
-
-
-
             </div>
         </div>
     </div>

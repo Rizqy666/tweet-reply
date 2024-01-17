@@ -10,7 +10,7 @@ class Tweets extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['post', 'user_id'];
+    protected $fillable = ['post', 'user_id', 'image'];
 
     public function user(): BelongsTo
     {

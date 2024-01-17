@@ -33,12 +33,23 @@ class TweetsController extends Controller
     {
         $request->validate([
             'post' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Sesuaikan validasi gambar sesuai kebutuhan
         ]);
 
-        Tweets::create([
+        $tweet = new Tweets([
             'post' => $request->input('post'),
             'user_id' => Auth::id(),
         ]);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images'), $imageName);
+
+            $tweet->image = $imageName;
+        }
+
+        $tweet->save();
 
         return redirect()
             ->route('tweets.index')
@@ -115,4 +126,5 @@ class TweetsController extends Controller
             ->route('tweets.index', $tweet->id)
             ->with('success', 'Reply added successfully.');
     }
+    
 }

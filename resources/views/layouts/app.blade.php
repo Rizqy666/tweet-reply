@@ -93,6 +93,14 @@
             });
         });
     </script>
+    <script>
+        function showDownloadAlert() {
+            var isConfirmed = confirm("Apakah Anda yakin ingin mengunduh gambar?");
+            if (isConfirmed) {
+                document.getElementById('downloadLink').click();
+            }
+        }
+    </script>
 </body>
 
 </html>
