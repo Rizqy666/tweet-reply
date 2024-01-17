@@ -53,23 +53,24 @@
                                 @endif
                                 @if ($tweet->image)
                                     <div>
-                                        @if ($tweet->image)
-                                            <button type="button" class="btn btn-primary btn-sm mx-1" data-toggle="modal"
-                                                data-target="#imageModal">
-                                                <i class="fas fa-image"></i> Pratinjau Gambar
-                                            </button>
-                                            <a href="{{ asset('images/' . $tweet->image) }}" download
-                                                class="btn btn-success btn-sm">
-                                                <i class="fas fa-download"></i> Unduh Gambar
-                                            </a>
-                                        @endif
+                                        <button type="button" class="btn btn-primary btn-sm mx-1" data-toggle="modal"
+                                            data-target="#imageModal{{ $tweet->id }}">
+                                            <i class="fas fa-image"></i> Pratinjau Gambar
+                                        </button>
+                                        <a href="{{ asset('images/' . $tweet->image) }}" download
+                                            class="btn btn-success btn-sm" onclick="confirmDownload()">
+                                            <i class="fas fa-download"></i> Unduh Gambar
+                                        </a>
+
                                         <!-- Modal -->
-                                        <div class="modal fade" id="imageModal" tabindex="-1" role="dialog"
-                                            aria-labelledby="imageModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="imageModal{{ $tweet->id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="imageModalLabel{{ $tweet->id }}"
+                                            aria-hidden="true">
                                             <div class="modal-dialog modal-xl">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+                                                        <h5 class="modal-title" id="imageModalLabel{{ $tweet->id }}">
+                                                            Image Preview</h5>
                                                         <button type="button" class="close" data-dismiss="modal"
                                                             aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
@@ -98,7 +99,15 @@
                                         @endphp
                                         <strong>{{ $userName }}</strong>:
                                         <i class="fas fa-reply"></i> {{ $reply->reply }}
+                                        @if ($reply->image)
+                                            <div>
+                                                <img src="{{ asset('storage/' . $reply->image) }}" alt="Tweet Image"
+                                                    class="img-fluid" style="max-width: 50%;">
+
+                                            </div>
+                                        @endif
                                     </div>
+                                    <small class="text-muted">{{ $reply->created_at->diffForHumans() }}</small>
                                 @endforeach
                             </div>
                             <div class="d-flex justify-content-between align-items-end">
@@ -124,22 +133,23 @@
                                     <button type="button" class="btn btn-primary btn-sm reply-btn">
                                         <i class="fas fa-reply"></i> Balas
                                     </button>
-
                                 </div>
                             </div>
-
                             <!-- Form balasan untuk setiap tweet -->
                             <form action="{{ route('tweets.storeReply', $tweet->id) }}" method="POST"
-                                class="mt-3 reply-form" style="display: none;">
+                                enctype="multipart/form-data" class="mt-3 reply-form" style="display: none;">
                                 @csrf
                                 <div class="mb-3">
                                     <label for="reply" class="form-label">Balasan Anda</label>
                                     <textarea name="reply" id="reply" cols="30" rows="2" class="form-control" required></textarea>
                                 </div>
                                 <div class="mb-3">
+                                    <label for="image" class="form-label">Unggah Gambar (opsional)</label>
+                                    <input type="file" name="image" accept="image/*" class="form-control">
+                                </div>
+                                <div class="mb-3">
                                     <button class="btn btn-primary btn-sm" type="submit"><i class="fas fa-reply"></i>
-                                        Kirim
-                                        Balasan</button>
+                                        Kirim Balasan</button>
                                 </div>
                             </form>
                         </div>

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Reply extends Model
 {
-    protected $fillable = ['reply', 'user_id', 'tweet_id'];
+    protected $fillable = ['user_id', 'tweet_id', 'reply', 'image'];
 
     public function tweet(): BelongsTo
     {

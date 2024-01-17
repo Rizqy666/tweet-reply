@@ -25,7 +25,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ url('/home') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -102,6 +102,19 @@
             var isConfirmed = confirm("Apakah Anda yakin ingin mengunduh gambar?");
             if (isConfirmed) {
                 document.getElementById('downloadLink').click();
+            }
+        }
+    </script>
+    <script>
+        function confirmDownload() {
+            var downloadConfirmed = confirm("Apakah Anda yakin ingin mengunduh gambar?");
+
+            if (downloadConfirmed) {
+                // Lanjutkan dengan proses mengunduh
+                document.getElementById('downloadLink').click();
+            } else {
+                // Pembatalan pengunduhan
+                // Anda dapat menambahkan logika tambahan atau pesan di sini
             }
         }
     </script>

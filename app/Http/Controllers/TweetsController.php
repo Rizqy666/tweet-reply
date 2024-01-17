@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Reply;
 use Illuminate\Support\Facades\Session;
 use App\Models\Tweets;
 use Illuminate\Http\Request;
@@ -111,20 +112,29 @@ class TweetsController extends Controller
             ->with('success', 'Tweet Deleted Successfully.');
     }
 
-    public function storeReply(Request $request, Tweets $tweet)
+    public function storeReply(Request $request, $tweetId)
     {
         $request->validate([
             'reply' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Sesuaikan dengan kebutuhan Anda
         ]);
 
-        $tweet->replies()->create([
+        $imagePath = null;
+
+        // Upload gambar dan simpan nama file di kolom 'image'
+        if ($request->File('image')) {
+            $imagePath = $request->file('image')->store('reply_images', 'public');
+        }
+
+        Reply::create([
+            'user_id' => auth()->id(),
+            'tweet_id' => $tweetId,
             'reply' => $request->input('reply'),
-            'user_id' => Auth::id(),
+            'image' => $imagePath,
         ]);
 
         return redirect()
-            ->route('tweets.index', $tweet->id)
-            ->with('success', 'Reply added successfully.');
+            ->route('tweets.index')
+            ->with('success', 'Balasan berhasil diposting.');
     }
-    
 }
